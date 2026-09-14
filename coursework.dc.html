@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<title>Coursework · Ivan Geisler</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,opsz,wght@0,8..60,300..600;1,8..60,300..600&family=Public+Sans:wght@400;500&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+body{margin:0;background:#edeef1;color:#15181c;-webkit-font-smoothing:antialiased}
+a{color:#1f3a5f;text-decoration:none}a:hover{color:#d97706;text-decoration:underline}
+</style>
+</helmet>
+<div data-screen-label="Coursework" style="font-family:'Public Sans',sans-serif;font-size:16px;line-height:1.55;padding:40px 24px 56px">
+  <div style="max-width:880px;margin:0 auto">
+    <a href="index.dc.html" style="font-family:'JetBrains Mono',monospace;font-size:13px;display:inline-block;margin-bottom:48px">← Main page</a>
+
+    <header style="max-width:720px">
+      <h1 style="font-family:'Source Serif 4',serif;font-weight:500;font-size:clamp(30px,5.5vw,38px);line-height:1.1;margin:0 0 14px;letter-spacing:-0.02em">Coursework</h1>
+      <p style="font-family:'Source Serif 4',serif;font-size:20px;line-height:1.45;margin:0;color:#2e3339;text-wrap:pretty">Quantitative coursework at MIT, Harvard, Stanford and UCL, grouped by domain and most recent first, with a one-line note on what each course covered.</p>
+    </header>
+
+    <sc-for list="{{ groups }}" as="group" hint-placeholder-count="5">
+      <section style="margin-top:52px">
+        <div style="display:flex;flex-wrap:wrap;gap:4px 14px;align-items:baseline;border-bottom:1px solid #15181c;padding-bottom:10px">
+          <h2 style="font-family:'Source Serif 4',serif;font-weight:500;font-size:24px;line-height:1.15;margin:0;letter-spacing:-0.01em">{{ group.theme }}</h2>
+          <div style="font-family:'JetBrains Mono',monospace;font-size:11.5px;letter-spacing:0.05em;text-transform:uppercase;color:#1f3a5f">{{ group.count }}</div>
+        </div>
+        <sc-for list="{{ group.courses }}" as="course" hint-placeholder-count="6">
+          <div style="display:flex;flex-wrap:wrap;gap:6px 18px;padding:11px 13px;margin-top:7px;background:#f8f9fb;border:1px solid #e2e5ea;border-radius:10px">
+            <div style="flex:0 0 84px"><div style="font-family:'JetBrains Mono',monospace;font-size:11.5px;color:#5a6068">{{ course.term }}</div><div style="font-family:'JetBrains Mono',monospace;font-size:10.5px;color:#5a6068;margin-top:2px">{{ course.level }}</div></div>
+            <div style="font-family:'JetBrains Mono',monospace;font-size:11.5px;color:#1f3a5f;flex:0 0 136px">{{ course.code }}</div>
+            <div style="flex:1 1 300px;min-width:0">
+              <div style="font-size:14.5px;line-height:1.35">{{ course.title }}</div>
+              <sc-if value="{{ course.desc }}" hint-placeholder-val="{{ true }}"><div style="font-size:13px;color:#5a6068;margin-top:3px;line-height:1.45;text-wrap:pretty">{{ course.desc }}</div></sc-if>
+            </div>
+          </div>
+        </sc-for>
+      </section>
+    </sc-for>
+
+    <p style="max-width:680px;margin:28px 0 0;font-size:13px;color:#5a6068;line-height:1.5;text-wrap:pretty">Also completed the standard BSc Economics core at UCL: microeconomics, macroeconomics, economic history, industrial economics, economics of information, applied economics and accounting for business.</p>
+
+    <footer style="margin-top:56px;padding-top:16px;border-top:1px solid #d5d9de;display:flex;flex-wrap:wrap;gap:8px 24px;justify-content:space-between;font-size:12.5px;color:#5a6068">
+      <div>Ivan Geisler, 2026. Built with plain HTML/CSS, hosted on GitHub Pages.</div>
+      <div style="display:flex;gap:16px"><a href="index.dc.html">Home</a><a href="https://github.com/igeisler">GitHub</a><a href="uploads/Resume_Ivan_Geisler.pdf" target="_blank" rel="noopener">CV</a></div>
+    </footer>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+const THEMES = [
+  ["Machine learning & deep learning", [
+    ["Fall 2026","MIT 6.7960","Deep Learning","Fundamentals of deep learning, theory and applications: MLP, CNN, RNN, graph net and transformer architectures; geometry and invariances; backpropagation and automatic differentiation; generalisation in high dimensions.",true],
+    ["Fall 2026","MIT 6.7900","Machine Learning","Machine learning from the standpoint of statistical inference: representation, generalisation and model selection; linear and additive models, boosting, support vector machines, non-parametric Bayesian methods, hidden Markov models, Bayesian networks, convolutional and recurrent networks.",true],
+    ["Fall 2026","MIT 15.S06","AI and Machine Learning in Finance","Seminar on applying modern machine learning to financial problems.",true],
+    ["Spring 2026","Harvard CS1090B","Data Science 2: Advanced Topics in Data Science","Advanced statistical modelling and prediction: deep learning architectures including CNNs, RNNs, transformers, language models, autoencoders and generative models, plus Bayesian methods and unsupervised learning. Project on multimodal volatility forecasting."],
+    ["Spring 2026","MIT 15.C51","Modeling with Machine Learning: Financial Technology","The finance module of MIT's Common Ground machine learning sequence: ML applied to valuation, credit analysis, proprietary trading, portfolio management, market structure and risk. Projects on oil-shock equity responses and realised-beta forecasting."],
+    ["Spring 2026","MIT 6.C51","Modeling with Machine Learning: from Algorithms to Applications","The core module taken alongside 15.C51: supervised and unsupervised methods with an emphasis on neural approaches, how and why they work, and when they apply."],
+  ]],
+  ["Statistics & econometrics", [
+    ["Summer 2026","Stanford STATS 217","Introduction to Stochastic Processes I","Random walks, Poisson processes, discrete- and continuous-time Markov chains, and branching processes."],
+    ["Spring 2026","Stanford STATS 203","Introduction to Regression Models and Analysis of Variance","Modelling and interpreting observational and experimental data with linear and nonlinear regression; model building and selection, multivariable analysis, fixed and random effects, experimental design."],
+    ["Autumn 2025","Stanford STATS 202","Statistical Learning and Data Science","Supervised learning with a focus on regression and classification, resampling and model selection, tree-based methods, and unsupervised methods including principal components and clustering."],
+    ["Fall 2025","MIT 15.457","Advanced Analytics of Finance","Modern analytical tools for finance: statistical inference, financial time series, event studies and machine learning for forecasting, applied to quantitative trading and risk management."],
+    ["2023/24","UCL ECON0019","Quantitative Economics and Econometrics","Core techniques of quantitative economics and econometrics, centred on OLS regression and inference, applied to testing economic theories and measuring magnitudes for policy; extends to more advanced regression models in term two."],
+    ["2022/23","UCL ECON0005","Statistical Methods in Economics","Probability, distributions, estimation and hypothesis testing, and an introduction to regression for economic data."],
+  ]],
+  ["Quantitative & advanced finance", [
+    ["Spring 2026","MIT 15.439","Quantitative Investment Management","Implementing investment strategies: behavioural finance and its market effects, building and testing quantitative strategies, portfolio construction and trading under transaction costs, risk management and execution. Top of class."],
+    ["Fall 2025","MIT 15.470","Asset Pricing","Doctoral asset pricing: arbitrage pricing, optimal consumption-portfolio choice, static equilibrium models, asymmetric information and dynamic modelling."],
+    ["Fall 2025","MIT 15.438","Fixed Income Securities and Derivatives","Duration and convexity, yield-curve modelling, interest-rate forwards, futures, swaps and options, credit risk and credit derivatives, mortgages and securitisation."],
+    ["Fall 2025","MIT 15.433","Financial Markets","Empirically driven study of equity, fixed income and derivatives markets: testing financial models on real data, key risk factors, and the quantitative tools used to analyse risk."],
+    ["Fall 2025","MIT 15.415","Foundations of Modern Finance","Core theory of capital markets and corporate finance: valuation, portfolio theory, pricing models for risky assets, market efficiency, and firms' investment and financing decisions."],
+    ["Fall 2025","MIT 15.425","Corporate Finance","Corporate financial management from the CFO's perspective: capital budgeting and valuation, working capital, capital structure, dividend policy and real options, taught through cases."],
+    ["Fall 2025","MIT 15.516","Corporate Financial Accounting","Financial statement preparation and analysis from the user's perspective: accrual accounting, revenue recognition, and how reporting choices affect reported earnings and valuation."],
+    ["2024/25","UCL ECON0113","Advanced Economics of Finance","Advanced asset pricing and financial economics: portfolio choice under uncertainty, equilibrium pricing, arbitrage and derivative valuation. The department's most demanding finance option."],
+    ["2024/25","UCL ECON0001","Economics of Financial Markets","The functioning of financial markets: how assets are priced, how information is incorporated into prices, and the role of financial intermediaries."],
+  ]],
+  ["Optimization & computing", [
+    ["Fall 2025","MIT 15.C57","Optimization Methods","Linear, integer, convex and robust optimisation and their applications; project on sparse index tracking via mixed-integer optimisation."],
+    ["Fall 2025","MIT 15.004","Programming for Finance Professionals","Python for financial problems: data manipulation, visualisation and reporting. Now a teaching assistant for the course."],
+  ]],
+  ["Mathematics & formal methods", [
+    ["Fall 2025","MIT 15.455","Advanced Mathematical Methods for Financial Engineering","Linear algebra, optimisation, probability, stochastic processes and statistics for quantitative finance, at a faster pace than 15.454."],
+    ["2024/25","UCL MATH0048","Mathematical Analysis","Rigorous real analysis: number systems and completeness, sup and inf, convergence of sequences, monotone and bounded sequences, subsequences and the Bolzano–Weierstrass theorem, series, continuity and differentiation. A proof-based pure mathematics module."],
+    ["2024/25","UCL MATH0050","Logic","First-order predicate logic: formal languages, the interplay between syntactic provability and semantic truth, soundness and completeness."],
+    ["2024/25","UCL ECON0027","Game Theory","Strategic interaction under complete and incomplete information: Nash and subgame-perfect equilibrium, repeated games, signalling and bargaining."],
+    ["2023/24","UCL MATH0047","Advanced Linear Algebra","Theory of matrices over the reals, real vector spaces and linear maps, with the techniques that follow from them."],
+    ["2023/24","UCL MATH0031","Financial Mathematics","Mathematical foundations of pricing: discrete-time models, no-arbitrage and risk-neutral valuation, and continuous-time methods."],
+    ["2022/23","UCL ECON0010","Mathematics for Economics","Calculus, linear algebra and constrained optimisation as used in economic theory."],
+  ]],
+];
+
+class Component extends DCLogic {
+  renderVals() {
+    return {
+      groups: THEMES.map(([theme, rows]) => ({
+        theme,
+        count: rows.length + " courses",
+        courses: rows.map(([term, code, title, desc, inProgress]) => ({
+          term, code, title, desc: desc || "", inProgress: !!inProgress,
+          level: code.startsWith("UCL") ? "undergraduate" : code === "MIT 15.470" ? "doctoral" : "graduate",
+        })),
+      })),
+    };
+  }
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,420 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<title>Ivan Geisler</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,opsz,wght@0,8..60,300..600;1,8..60,300..600&family=Public+Sans:wght@400;500&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<script src="./image-slot.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/pdfjs-dist@3.11.174/build/pdf.min.js"></script>
+<style>
+html{scroll-behavior:smooth}
+body{margin:0;background:#edeef1;color:#15181c;-webkit-font-smoothing:antialiased}
+a{color:#1f3a5f;text-decoration:none}a:hover{color:#d97706;text-decoration:underline}
+.prow{display:grid;grid-template-columns:minmax(0,1fr);gap:24px;padding:44px 0;border-bottom:1px solid #e2e5ea}
+@media(min-width:860px){.prow{grid-template-columns:minmax(0,1fr) minmax(0,1.22fr);gap:26px 52px;align-items:center}.prow.flip{grid-template-columns:minmax(0,1.22fr) minmax(0,1fr)}.prow.flip>figure{order:-1}}
+.rail{display:none}
+@media(min-width:1380px){.rail{display:flex}}
+</style>
+</helmet>
+<div data-screen-label="Home" style="font-family:'Public Sans',sans-serif;font-size:16px;line-height:1.55;padding:64px 24px 56px">
+
+  <div aria-hidden="true" style="position:fixed;top:0;left:0;right:0;height:3px;z-index:20;background:#1f3a5f"></div>
+
+  <nav class="rail" style="position:fixed;left:28px;top:50%;transform:translateY(-50%);flex-direction:column;gap:12px;border-left:1px solid #d5d9de;padding:4px 0 4px 14px;z-index:5">
+    <a href="#projects" style="font-family:'JetBrains Mono',monospace;font-size:11.5px;letter-spacing:0.04em;color:{{ rail.projects }}">Projects</a>
+    <a href="#education" style="font-family:'JetBrains Mono',monospace;font-size:11.5px;letter-spacing:0.04em;color:{{ rail.education }}">Education</a>
+    <a href="#experience" style="font-family:'JetBrains Mono',monospace;font-size:11.5px;letter-spacing:0.04em;color:{{ rail.experience }}">Experience</a>
+    <a href="#beyond" style="font-family:'JetBrains Mono',monospace;font-size:11.5px;letter-spacing:0.04em;color:{{ rail.beyond }}">Beyond work</a>
+  </nav>
+
+  <header style="max-width:820px;margin:0 auto;display:flex;flex-wrap:wrap;gap:36px 44px;align-items:flex-start">
+    <img src="uploads/portrait-hero.png" alt="Ivan Geisler" width="240" height="240" style="width:240px;height:240px;flex:0 0 240px;border-radius:3px;object-fit:cover;display:block">
+    <div style="flex:1 1 380px;min-width:0">
+      <h1 style="font-family:'Source Serif 4',serif;font-weight:500;font-size:clamp(34px,6vw,44px);line-height:1.08;margin:0 0 12px;letter-spacing:-0.02em">Ivan Geisler</h1>
+      <div style="font-family:'JetBrains Mono',monospace;font-size:13px;color:#1f3a5f">deep learning · quantitative research · equities</div>
+      <div style="font-family:'JetBrains Mono',monospace;font-size:12px;color:#5a6068;margin:6px 0 24px">Graduating December 2026 · seeking quantitative research roles</div>
+      <p style="font-family:'Source Serif 4',serif;font-size:20px;line-height:1.5;margin:0 0 26px;text-wrap:pretty">I'm studying for a Master of Financial Mathematics at MIT, completing a graduate certificate in statistics at Stanford in parallel. My interests lie in empirical research on market data: building return-predictive strategies, testing whether they survive out of sample, and turning them into portfolios. Along the way, this has grown into a deeper interest in deep learning, both in combining and applying established neural network methods when building those strategies, and in understanding the models themselves: how the architecture shapes what they can learn, and what a trained one is actually doing. I split my time between Cambridge, MA and the Czech Republic, and do my best thinking in libraries and on steep ground.</p>
+      <nav style="display:flex;gap:10px;flex-wrap:wrap;font-size:15px;align-items:center">
+        <a href="uploads/Resume_Ivan_Geisler.pdf" onClick="{{ openCv }}">CV</a><span style="color:#a8adb4">·</span><a href="mailto:ivan2612@mit.edu">Email</a>
+      </nav>
+    </div>
+  </header>
+
+  <section id="projects" style="max-width:1040px;margin:104px auto 0">
+    <div style="padding-bottom:14px;position:relative"><div aria-hidden="true" style="position:absolute;left:0;right:0;bottom:0;display:flex;height:2px"><span style="flex:0 0 120px;background:#1f3a5f"></span><span style="flex:1;background:#15181c"></span></div>
+      <h2 style="font-family:'Source Serif 4',serif;font-weight:500;font-size:32px;line-height:1.1;margin:0;letter-spacing:-0.015em">Research projects</h2>
+      <div style="font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:0.06em;text-transform:uppercase;color:#1f3a5f;margin-top:8px" style-before="content:'';display:inline-block;width:20px;height:3px;background:#1f3a5f;vertical-align:middle;margin-right:9px">Academic and professional research · 2025–2026</div>
+    </div>
+
+    <div class="prow flip">
+      <div>
+        <div style="font-family:'JetBrains Mono',monospace;font-size:12px;color:#5a6068;margin-bottom:14px;display:flex;flex-wrap:wrap;gap:4px 12px"><span>MIT · 2026</span><sc-if value="{{ showInProgress }}" hint-placeholder-val="{{ true }}"><span style="color:#d97706;display:inline-flex;align-items:center;gap:6px"><span style="width:6px;height:6px;border-radius:50%;background:#d97706;display:inline-block"></span>in progress</span></sc-if></div>
+        <h3 style="font-family:'Source Serif 4',serif;font-weight:500;font-size:26px;line-height:1.2;margin:0 0 14px;letter-spacing:-0.01em">Does a gate know which GRU to trust?</h3>
+        <p style="font-family:'Source Serif 4',serif;font-size:21px;line-height:1.35;margin:0 0 20px;color:#2e3339;text-wrap:pretty">Four GRU experts, each a different bet on how to read the same year of returns. A gate sees market state and decides who speaks. The question is whether it learns to route, or quietly collapses onto one expert.</p>
+        <div style="font-family:'JetBrains Mono',monospace;font-size:13px;color:#848a92;border-bottom:1px solid #e2e5ea;padding-bottom:2px;display:inline-block">Write-up in progress</div>
+      </div>
+      <figure style="margin:0">
+        <div style="width:100%;aspect-ratio:16/10;border:1px solid #dadee3;background:#f8f9fb">
+          <svg viewBox="0 0 800 500" style="display:block;width:100%;height:100%" role="img" aria-label="Sketch of the routing design: four expert nodes converge on a gate, which emits a single output.">
+            <g fill="none" stroke-linecap="round">
+              <g stroke="#1f3a5f" stroke-width="2" opacity="0.55">
+                <path d="M288 106 C 336 106, 344 208, 376 234"></path>
+                <path d="M288 202 C 336 202, 348 230, 376 245"></path>
+                <path d="M288 298 C 336 298, 348 270, 376 255"></path>
+                <path d="M288 394 C 336 394, 344 292, 376 266"></path>
+              </g>
+
+              <g fill="#1f3a5f">
+                <circle cx="250" cy="106" r="32"></circle>
+                <circle cx="250" cy="202" r="32"></circle>
+                <circle cx="250" cy="298" r="32"></circle>
+                <circle cx="250" cy="394" r="32"></circle>
+              </g>
+
+              <rect x="380" y="210" width="80" height="80" rx="4" stroke="#1f3a5f" stroke-width="2.4" stroke-dasharray="9 7"></rect>
+
+              <path d="M460 250 H500" stroke="#1f3a5f" stroke-width="2" opacity="0.55"></path>
+              <circle cx="536" cy="250" r="32" fill="#e3e9f2" stroke="#1f3a5f" stroke-width="2.4"></circle>
+            </g>
+          </svg>
+        </div>
+        <figcaption style="margin-top:10px;font-size:12.5px;color:#5a6068;line-height:1.5;text-wrap:pretty">Four experts read the same year of inputs; a learned gate decides how much each one contributes to the score.</figcaption>
+      </figure>
+    </div>
+
+    <div class="prow">
+      <div>
+        <div style="font-family:'JetBrains Mono',monospace;font-size:12px;color:#5a6068;margin-bottom:14px">Independent project · 2026</div>
+        <h3 style="font-family:'Source Serif 4',serif;font-weight:500;font-size:26px;line-height:1.2;margin:0 0 14px;letter-spacing:-0.01em">Where a GRU keeps its memory</h3>
+        <p style="font-family:'Source Serif 4',serif;font-size:21px;line-height:1.35;margin:0 0 20px;color:#2e3339;text-wrap:pretty">A year of returns goes in. What survives the recurrence, and does the prediction benefit? Two memory bottlenecks took gross Sharpe from 1.25 to 2.36 at the same 15,361 parameters: an unearned copying prior and a narrowing transport map.</p>
+        <a href="project-gru-memory.dc.html" style="font-family:'JetBrains Mono',monospace;font-size:13px;border-bottom:1px solid #c8c4bc;padding-bottom:2px">Read more <span style="color:#1f3a5f">→</span></a>
+      </div>
+      <figure style="margin:0">
+        <div style="width:100%;aspect-ratio:16/10;border:1px solid #dadee3;background:#f8f9fb"><img src="uploads/hero_gru_gates_b.png" width="1600" height="1000" loading="lazy" decoding="async" alt="Two horizontal mosaics of small square cells, one above the other. The upper mosaic is almost entirely deep navy with a few pale columns at the right edge. The lower mosaic grades from navy at the left through pale grey to warm ochre at the right, with a paler top row." style="display:block;width:100%;height:100%;object-fit:contain"></div>
+        <figcaption style="margin-top:10px;font-size:12.5px;color:#5a6068;line-height:1.5;text-wrap:pretty">Update gate of every hidden unit across the year of inputs: initial model above, final model below.</figcaption>
+      </figure>
+    </div>
+
+    <div class="prow flip">
+      <div>
+        <div style="font-family:'JetBrains Mono',monospace;font-size:12px;color:#5a6068;margin-bottom:14px">MIT 15.C57 · 2026</div>
+        <h3 style="font-family:'Source Serif 4',serif;font-weight:500;font-size:26px;line-height:1.2;margin:0 0 14px;letter-spacing:-0.01em">Sparse S&amp;P 500 index tracking</h3>
+        <p style="font-family:'Source Serif 4',serif;font-size:21px;line-height:1.35;margin:0 0 20px;color:#2e3339;text-wrap:pretty">Replicating the index with 30 stocks: which covariance estimator should feed the optimiser, and can you trust its risk forecast out of sample?</p>
+        <a href="project-sparse-index-tracking.dc.html" style="font-family:'JetBrains Mono',monospace;font-size:13px;border-bottom:1px solid #c8c4bc;padding-bottom:2px">Read more <span style="color:#1f3a5f">→</span></a>
+      </div>
+      <figure style="margin:0">
+        <div style="width:100%;aspect-ratio:16/10;border:1px solid #dadee3;background:#f8f9fb"><img src="uploads/hero_index_tracking-705f619c.png" width="1600" height="1000" loading="lazy" decoding="async" alt="A treemap of the S&amp;P 500 at one rebalance date: about 500 rectangles sized by index weight, the largest at the left and the tail running to the bottom right. Thirty of them, the holdings the optimiser selected, are filled in deep navy and spread diagonally across the whole field; the remaining members are pale grey." style="display:block;width:100%;height:100%;object-fit:contain"></div>
+        <figcaption style="margin-top:10px;font-size:12.5px;color:#5a6068;line-height:1.5;text-wrap:pretty">The 30 holdings the optimiser selected at one rebalance in the frozen 2015–2024 holdout, shown against all ~500 index members.</figcaption>
+      </figure>
+    </div>
+
+    <div style="padding:34px 0 0">
+      <div style="font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:0.06em;text-transform:uppercase;color:#1f3a5f;margin-bottom:6px">More projects</div>
+      <a href="project-fixed-income-allocation.dc.html" style="display:flex;flex-wrap:wrap;gap:4px 20px;align-items:baseline;padding:13px 0;border-top:1px solid #e2e5ea;color:inherit" style-hover="color:#d97706;text-decoration:none">
+        <div style="flex:1 1 280px;min-width:0">
+          <div style="font-family:'Source Serif 4',serif;font-size:18px;font-weight:500;line-height:1.25">Monthly signals for global bond allocation</div>
+          <div style="font-family:'JetBrains Mono',monospace;font-size:11px;color:#5a6068;margin-top:4px">Wellington Management · 2026</div>
+        </div>
+        <span style="font-size:14px;color:#5a6068;flex:1 1 240px;min-width:0">Monthly excess-return forecasts across seven global fixed income sectors as decision support for a discretionary PM</span>
+        <span style="font-family:'JetBrains Mono',monospace;font-size:12px;color:#1f3a5f">→</span>
+      </a>
+      <a href="project-volume-forecasting.dc.html" style="display:flex;flex-wrap:wrap;gap:4px 20px;align-items:baseline;padding:13px 0;border-top:1px solid #e2e5ea;color:inherit" style-hover="color:#d97706;text-decoration:none">
+        <div style="flex:1 1 280px;min-width:0">
+          <div style="font-family:'Source Serif 4',serif;font-size:18px;font-weight:500;line-height:1.25">S&amp;P 500 volume forecasting</div>
+          <div style="font-family:'JetBrains Mono',monospace;font-size:11px;color:#5a6068;margin-top:4px">Independent project · 2025</div>
+        </div>
+        <span style="font-size:14px;color:#5a6068;flex:1 1 240px;min-width:0">Does a tree ensemble beat a well-specified linear benchmark for daily volume?</span>
+        <span style="font-family:'JetBrains Mono',monospace;font-size:12px;color:#1f3a5f">→</span>
+      </a>
+    </div>
+  </section>
+
+  <section id="education" style="max-width:820px;margin:96px auto 0">
+    <div style="font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:0.06em;text-transform:uppercase;color:#1f3a5f;margin-bottom:18px" style-before="content:'';display:inline-block;width:20px;height:3px;background:#1f3a5f;vertical-align:middle;margin-right:9px">Education and coursework</div>
+    <div>
+      <div style="display:flex;flex-wrap:wrap;gap:2px 24px;align-items:baseline;justify-content:space-between;padding:14px 0;border-top:1px solid #d5d9de">
+        <div style="flex:1 1 300px">
+          <div style="font-family:'Source Serif 4',serif;font-size:20px;font-weight:500">Massachusetts Institute of Technology</div>
+          <div style="font-size:13.5px;color:#5a6068;margin-top:2px;line-height:1.45">Quantitative finance core, then a machine learning and deep learning focus. TA for 15.004 Programming for Finance and MITx 15.455x Mathematical Methods for Quantitative Finance.</div>
+        </div>
+        <div style="font-family:'JetBrains Mono',monospace;font-size:12.5px;color:#5a6068;text-align:right">Master of Financial Mathematics · expected Dec 2026</div>
+      </div>
+      <div style="display:flex;flex-wrap:wrap;gap:2px 24px;align-items:baseline;justify-content:space-between;padding:14px 0;border-top:1px solid #d5d9de">
+        <div style="flex:1 1 300px">
+          <div style="font-family:'Source Serif 4',serif;font-size:20px;font-weight:500">Stanford</div>
+          <div style="font-size:13.5px;color:#5a6068;margin-top:2px;line-height:1.45">Regression, statistical learning and stochastic processes, taken in parallel with MIT.</div>
+        </div>
+        <div style="font-family:'JetBrains Mono',monospace;font-size:12.5px;color:#5a6068;text-align:right">Graduate Certificate in Statistics · 2025–2026</div>
+      </div>
+      <div style="display:flex;flex-wrap:wrap;gap:2px 24px;align-items:baseline;justify-content:space-between;padding:14px 0;border-top:1px solid #d5d9de;border-bottom:1px solid #d5d9de">
+        <div style="flex:1 1 300px">
+          <div style="font-family:'Source Serif 4',serif;font-size:20px;font-weight:500">UCL</div>
+          <div style="font-size:13.5px;color:#5a6068;margin-top:2px;line-height:1.45">First Class Honours, ranked 2nd of ~430 in the cohort. Economics with a heavy mathematics and econometrics component.</div>
+        </div>
+        <div style="font-family:'JetBrains Mono',monospace;font-size:12.5px;color:#5a6068;text-align:right">BSc Economics · 2022–2025</div>
+      </div>
+    </div>
+    <sc-if value="{{ showCourseGrid }}" hint-placeholder-val="{{ true }}">
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,190px),1fr));gap:20px 18px;margin-top:26px;align-items:start">
+      <div>
+        <div style="display:flex;align-items:flex-end;min-height:2.8em;padding-bottom:5px;margin-bottom:9px;border-bottom:1px solid #d5d9de"><span style="font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:0.05em;text-transform:uppercase;color:#5a6068;line-height:1.3">Machine learning &amp; deep learning</span></div>
+        <div style="display:flex;flex-direction:column;gap:7px">
+          <div style="background:#f8f9fb;border:1px solid #e2e5ea;border-radius:10px;padding:9px 12px">
+            <div style="font-size:13.5px;line-height:1.3">Deep Learning</div>
+            <div style="display:flex;flex-wrap:wrap;gap:2px 9px;margin-top:5px;font-family:'JetBrains Mono',monospace;font-size:10.5px;color:#5a6068"><span style="color:#1f3a5f;white-space:nowrap">MIT 6.7960</span><span>graduate</span></div>
+          </div>
+          <div style="background:#f8f9fb;border:1px solid #e2e5ea;border-radius:10px;padding:9px 12px">
+            <div style="font-size:13.5px;line-height:1.3">Machine Learning</div>
+            <div style="display:flex;flex-wrap:wrap;gap:2px 9px;margin-top:5px;font-family:'JetBrains Mono',monospace;font-size:10.5px;color:#5a6068"><span style="color:#1f3a5f;white-space:nowrap">MIT 6.7900</span><span>graduate</span></div>
+          </div>
+          <div style="background:#f8f9fb;border:1px solid #e2e5ea;border-radius:10px;padding:9px 12px">
+            <div style="font-size:13.5px;line-height:1.3">AI and Machine Learning in Finance</div>
+            <div style="display:flex;flex-wrap:wrap;gap:2px 9px;margin-top:5px;font-family:'JetBrains Mono',monospace;font-size:10.5px;color:#5a6068"><span style="color:#1f3a5f;white-space:nowrap">MIT 15.S06</span><span>graduate</span></div>
+          </div>
+          <div style="background:#f8f9fb;border:1px solid #e2e5ea;border-radius:10px;padding:9px 12px">
+            <div style="font-size:13.5px;line-height:1.3">Data Science 2: Advanced Topics</div>
+            <div style="display:flex;flex-wrap:wrap;gap:2px 9px;margin-top:5px;font-family:'JetBrains Mono',monospace;font-size:10.5px;color:#5a6068"><span style="color:#1f3a5f;white-space:nowrap">Harvard CS1090B</span><span>graduate</span></div>
+          </div>
+          <div style="background:#f8f9fb;border:1px solid #e2e5ea;border-radius:10px;padding:9px 12px">
+            <div style="font-size:13.5px;line-height:1.3">Modeling with Machine Learning: Financial Technology</div>
+            <div style="display:flex;flex-wrap:wrap;gap:2px 9px;margin-top:5px;font-family:'JetBrains Mono',monospace;font-size:10.5px;color:#5a6068"><span style="color:#1f3a5f;white-space:nowrap">MIT 15.C51</span><span>graduate</span></div>
+          </div>
+        </div>
+      </div>
+      <div>
+        <div style="display:flex;align-items:flex-end;min-height:2.8em;padding-bottom:5px;margin-bottom:9px;border-bottom:1px solid #d5d9de"><span style="font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:0.05em;text-transform:uppercase;color:#5a6068;line-height:1.3">Statistics &amp; econometrics</span></div>
+        <div style="display:flex;flex-direction:column;gap:7px">
+          <div style="background:#f8f9fb;border:1px solid #e2e5ea;border-radius:10px;padding:9px 12px">
+            <div style="font-size:13.5px;line-height:1.3">Advanced Analytics of Finance</div>
+            <div style="display:flex;flex-wrap:wrap;gap:2px 9px;margin-top:5px;font-family:'JetBrains Mono',monospace;font-size:10.5px;color:#5a6068"><span style="color:#1f3a5f;white-space:nowrap">MIT 15.457</span><span>graduate</span></div>
+          </div>
+          <div style="background:#f8f9fb;border:1px solid #e2e5ea;border-radius:10px;padding:9px 12px">
+            <div style="font-size:13.5px;line-height:1.3">Regression Models and Analysis of Variance</div>
+            <div style="display:flex;flex-wrap:wrap;gap:2px 9px;margin-top:5px;font-family:'JetBrains Mono',monospace;font-size:10.5px;color:#5a6068"><span style="color:#1f3a5f;white-space:nowrap">Stanford STATS 203</span><span>graduate</span></div>
+          </div>
+          <div style="background:#f8f9fb;border:1px solid #e2e5ea;border-radius:10px;padding:9px 12px">
+            <div style="font-size:13.5px;line-height:1.3">Statistical Learning and Data Science</div>
+            <div style="display:flex;flex-wrap:wrap;gap:2px 9px;margin-top:5px;font-family:'JetBrains Mono',monospace;font-size:10.5px;color:#5a6068"><span style="color:#1f3a5f;white-space:nowrap">Stanford STATS 202</span><span>graduate</span></div>
+          </div>
+          <div style="background:#f8f9fb;border:1px solid #e2e5ea;border-radius:10px;padding:9px 12px">
+            <div style="font-size:13.5px;line-height:1.3">Introduction to Stochastic Processes I</div>
+            <div style="display:flex;flex-wrap:wrap;gap:2px 9px;margin-top:5px;font-family:'JetBrains Mono',monospace;font-size:10.5px;color:#5a6068"><span style="color:#1f3a5f;white-space:nowrap">Stanford STATS 217</span><span>graduate</span></div>
+          </div>
+          <div style="background:#f8f9fb;border:1px solid #e2e5ea;border-radius:10px;padding:9px 12px">
+            <div style="font-size:13.5px;line-height:1.3">Quantitative Economics and Econometrics</div>
+            <div style="display:flex;flex-wrap:wrap;gap:2px 9px;margin-top:5px;font-family:'JetBrains Mono',monospace;font-size:10.5px;color:#5a6068"><span style="color:#1f3a5f;white-space:nowrap">UCL ECON0019</span><span>undergraduate</span></div>
+          </div>
+        </div>
+      </div>
+      <div>
+        <div style="display:flex;align-items:flex-end;min-height:2.8em;padding-bottom:5px;margin-bottom:9px;border-bottom:1px solid #d5d9de"><span style="font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:0.05em;text-transform:uppercase;color:#5a6068;line-height:1.3">Quantitative finance</span></div>
+        <div style="display:flex;flex-direction:column;gap:7px">
+          <div style="background:#f8f9fb;border:1px solid #e2e5ea;border-radius:10px;padding:9px 12px">
+            <div style="font-size:13.5px;line-height:1.3">Optimization Methods</div>
+            <div style="display:flex;flex-wrap:wrap;gap:2px 9px;margin-top:5px;font-family:'JetBrains Mono',monospace;font-size:10.5px;color:#5a6068"><span style="color:#1f3a5f;white-space:nowrap">MIT 15.C57</span><span>graduate</span></div>
+          </div>
+          <div style="background:#f8f9fb;border:1px solid #e2e5ea;border-radius:10px;padding:9px 12px">
+            <div style="font-size:13.5px;line-height:1.3">Quantitative Investment Management</div>
+            <div style="display:flex;flex-wrap:wrap;gap:2px 9px;margin-top:5px;font-family:'JetBrains Mono',monospace;font-size:10.5px;color:#5a6068"><span style="color:#1f3a5f;white-space:nowrap">MIT 15.439</span><span>graduate</span></div>
+          </div>
+          <div style="background:#f8f9fb;border:1px solid #e2e5ea;border-radius:10px;padding:9px 12px">
+            <div style="font-size:13.5px;line-height:1.3">Asset Pricing</div>
+            <div style="display:flex;flex-wrap:wrap;gap:2px 9px;margin-top:5px;font-family:'JetBrains Mono',monospace;font-size:10.5px;color:#5a6068"><span style="color:#1f3a5f;white-space:nowrap">MIT 15.470</span><span>doctoral</span></div>
+          </div>
+          <div style="background:#f8f9fb;border:1px solid #e2e5ea;border-radius:10px;padding:9px 12px">
+            <div style="font-size:13.5px;line-height:1.3">Fixed Income Securities and Derivatives</div>
+            <div style="display:flex;flex-wrap:wrap;gap:2px 9px;margin-top:5px;font-family:'JetBrains Mono',monospace;font-size:10.5px;color:#5a6068"><span style="color:#1f3a5f;white-space:nowrap">MIT 15.438</span><span>graduate</span></div>
+          </div>
+        </div>
+      </div>
+      <div>
+        <div style="display:flex;align-items:flex-end;min-height:2.8em;padding-bottom:5px;margin-bottom:9px;border-bottom:1px solid #d5d9de"><span style="font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:0.05em;text-transform:uppercase;color:#5a6068;line-height:1.3">Mathematics</span></div>
+        <div style="display:flex;flex-direction:column;gap:7px">
+          <div style="background:#f8f9fb;border:1px solid #e2e5ea;border-radius:10px;padding:9px 12px">
+            <div style="font-size:13.5px;line-height:1.3">Advanced Mathematical Methods for Financial Engineering</div>
+            <div style="display:flex;flex-wrap:wrap;gap:2px 9px;margin-top:5px;font-family:'JetBrains Mono',monospace;font-size:10.5px;color:#5a6068"><span style="color:#1f3a5f;white-space:nowrap">MIT 15.455</span><span>graduate</span></div>
+          </div>
+          <div style="background:#f8f9fb;border:1px solid #e2e5ea;border-radius:10px;padding:9px 12px">
+            <div style="font-size:13.5px;line-height:1.3">Advanced Linear Algebra</div>
+            <div style="display:flex;flex-wrap:wrap;gap:2px 9px;margin-top:5px;font-family:'JetBrains Mono',monospace;font-size:10.5px;color:#5a6068"><span style="color:#1f3a5f;white-space:nowrap">UCL MATH0047</span><span>undergraduate</span></div>
+          </div>
+          <div style="background:#f8f9fb;border:1px solid #e2e5ea;border-radius:10px;padding:9px 12px">
+            <div style="font-size:13.5px;line-height:1.3">Mathematical Analysis</div>
+            <div style="display:flex;flex-wrap:wrap;gap:2px 9px;margin-top:5px;font-family:'JetBrains Mono',monospace;font-size:10.5px;color:#5a6068"><span style="color:#1f3a5f;white-space:nowrap">UCL MATH0048</span><span>undergraduate</span></div>
+          </div>
+          <div style="background:#f8f9fb;border:1px solid #e2e5ea;border-radius:10px;padding:9px 12px">
+            <div style="font-size:13.5px;line-height:1.3">Financial Mathematics</div>
+            <div style="display:flex;flex-wrap:wrap;gap:2px 9px;margin-top:5px;font-family:'JetBrains Mono',monospace;font-size:10.5px;color:#5a6068"><span style="color:#1f3a5f;white-space:nowrap">UCL MATH0031</span><span>undergraduate</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    </sc-if>
+    <a href="coursework.dc.html" style="font-family:'JetBrains Mono',monospace;font-size:12.5px;display:inline-block;margin-top:18px;border-bottom:1px solid #c8c4bc;padding-bottom:2px">All coursework <span style="color:#1f3a5f">→</span></a>
+  </section>
+
+  <section id="experience" style="max-width:820px;margin:72px auto 0">
+    <div style="font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:0.06em;text-transform:uppercase;color:#1f3a5f;margin-bottom:18px" style-before="content:'';display:inline-block;width:20px;height:3px;background:#1f3a5f;vertical-align:middle;margin-right:9px">Experience</div>
+    <div style="display:flex;flex-direction:column;border-left:1px solid #d5d9de;margin-left:3px">
+      <div style="position:relative;padding:0 0 18px 22px" style-before="content:'';position:absolute;left:-3.5px;top:7px;width:6px;height:6px;border-radius:50%;background:#1f3a5f">
+        <div style="display:flex;flex-wrap:wrap;gap:2px 20px;justify-content:space-between;align-items:baseline"><div style="font-size:15.5px"><span style="font-weight:500">MIT</span> <span style="color:#5a6068">·</span> Teaching Assistant, MITx 15.455x Mathematical Methods for Quantitative Finance</div><div style="font-family:'JetBrains Mono',monospace;font-size:12.5px;color:#5a6068">Jan – Dec 2026</div></div>
+      </div>
+      <div style="position:relative;padding:0 0 18px 22px" style-before="content:'';position:absolute;left:-3.5px;top:7px;width:6px;height:6px;border-radius:50%;background:#b6bbc1">
+        <div style="display:flex;flex-wrap:wrap;gap:2px 20px;justify-content:space-between;align-items:baseline"><div style="font-size:15.5px"><span style="font-weight:500">MIT</span> <span style="color:#5a6068">·</span> Teaching Assistant, 15.004 Programming for Finance</div><div style="font-family:'JetBrains Mono',monospace;font-size:12.5px;color:#5a6068">Summer 2026</div></div>
+      </div>
+      <div style="position:relative;padding:0 0 18px 22px" style-before="content:'';position:absolute;left:-3.5px;top:7px;width:6px;height:6px;border-radius:50%;background:#b6bbc1">
+        <div style="display:flex;flex-wrap:wrap;gap:2px 20px;justify-content:space-between;align-items:baseline"><div style="font-size:15.5px"><span style="font-weight:500">Wellington Management</span> <span style="color:#5a6068">·</span> Action Learning Project, fixed income</div><div style="font-family:'JetBrains Mono',monospace;font-size:12.5px;color:#5a6068">Winter 2026</div></div>
+      </div>
+      <div style="position:relative;padding:0 0 18px 22px" style-before="content:'';position:absolute;left:-3.5px;top:7px;width:6px;height:6px;border-radius:50%;background:#b6bbc1">
+        <div style="display:flex;flex-wrap:wrap;gap:2px 20px;justify-content:space-between;align-items:baseline"><div style="font-size:15.5px"><span style="font-weight:500">Penta</span> <span style="color:#5a6068">·</span> Private equity, Prague</div><div style="font-family:'JetBrains Mono',monospace;font-size:12.5px;color:#5a6068">Summer 2025</div></div>
+      </div>
+      <div style="position:relative;padding:0 0 2px 22px" style-before="content:'';position:absolute;left:-3.5px;top:7px;width:6px;height:6px;border-radius:50%;background:#b6bbc1">
+        <div style="display:flex;flex-wrap:wrap;gap:2px 20px;justify-content:space-between;align-items:baseline"><div style="font-size:15.5px"><span style="font-weight:500">McKinsey &amp; Company</span> <span style="color:#5a6068">·</span> Consulting, Prague</div><div style="font-family:'JetBrains Mono',monospace;font-size:12.5px;color:#5a6068">Summer 2024</div></div>
+      </div>
+    </div>
+  </section>
+
+  <section id="beyond" style="max-width:820px;margin:72px auto 0">
+    <div style="font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:0.06em;text-transform:uppercase;color:#1f3a5f;margin-bottom:18px" style-before="content:'';display:inline-block;width:20px;height:3px;background:#1f3a5f;vertical-align:middle;margin-right:9px">Beyond work</div>
+    <div style="display:flex;flex-direction:column;gap:26px">
+      <figure style="margin:0;display:flex;flex-wrap:wrap;gap:14px 26px;align-items:center">
+        <div style="flex:1 1 300px;min-width:0;aspect-ratio:4/3;filter:saturate(0.82);border:1px solid #dadee3;background:#f8f9fb"><img src="uploads/beyond_mountains.jpg" width="794" height="596" loading="lazy" decoding="async" alt="Three hikers on a railed viewing platform high above a lake valley, limestone ridges and layered blue mountains behind them under a bright cloudy sky." style="display:block;width:100%;height:100%;object-fit:cover"></div>
+        <figcaption style="flex:1 1 260px;min-width:0;font-size:14.5px;line-height:1.45;text-wrap:pretty"><span style="font-family:'Source Serif 4',serif;font-size:17px;font-weight:500">Mountains.</span> <span style="color:#5a6068">Experienced hiker, happiest on steep and exposed ground. Increasingly on via ferrata routes, where the day is half climbing and half route-finding. Pictured with my girlfriend and my brother.</span></figcaption>
+      </figure>
+      <figure style="margin:0;display:flex;flex-wrap:wrap;gap:14px 26px;align-items:center">
+        <div style="flex:1 1 300px;min-width:0;aspect-ratio:4/3;filter:saturate(0.82);border:1px solid #dadee3;background:#f8f9fb"><img src="uploads/beyond_endurance.jpg" width="1200" height="900" loading="lazy" decoding="async" alt="A cyclist in a black tri suit riding a road bike along an empty stretch of asphalt during a race, a limestone cliff and a village behind him." style="display:block;width:100%;height:100%;object-fit:cover"></div>
+        <figcaption style="flex:1 1 260px;min-width:0;font-size:14.5px;line-height:1.45;text-wrap:pretty"><span style="font-family:'Source Serif 4',serif;font-size:17px;font-weight:500">Long distance.</span> <span style="color:#5a6068">Mostly running, with two Ironman 70.3 finishes. I like having something outside work that asks for the same persistence and offers no shortcuts.</span></figcaption>
+      </figure>
+      <figure style="margin:0;display:flex;flex-wrap:wrap;gap:14px 26px;align-items:center">
+        <div style="flex:1 1 300px;min-width:0;aspect-ratio:4/3;filter:saturate(0.82);border:1px solid #dadee3;background:#f8f9fb"><img src="uploads/IMG_9831.jpg" loading="lazy" decoding="async" alt="An open sudoku book resting on striped bedding, both pages filled in by hand in blue ballpoint over the printed clues." style="display:block;width:100%;height:100%;object-fit:cover"></div>
+        <figcaption style="flex:1 1 260px;min-width:0;font-size:14.5px;line-height:1.45;text-wrap:pretty"><span style="font-family:'Source Serif 4',serif;font-size:17px;font-weight:500">Puzzles and board games.</span> <span style="color:#5a6068">Hard sudoku for the solving techniques, and long strategy games with my family whenever we are in the same place.</span></figcaption>
+      </figure>
+    </div>
+  </section>
+
+  <sc-if value="{{ cvOpen }}" hint-placeholder-val="{{ false }}">
+  <div onClick="{{ closeCv }}" style="position:fixed;inset:0;z-index:40;background:rgba(21,24,28,0.55);display:flex;align-items:center;justify-content:center;padding:28px 20px">
+    <div onClick="{{ stopClose }}" style="width:100%;max-width:840px;max-height:100%;min-height:0;display:flex;flex-direction:column;background:#edeef1;border:1px solid #c7ccd3;box-shadow:0 18px 50px rgba(21,24,28,0.28)">
+      <div style="display:flex;flex-wrap:wrap;gap:10px 20px;align-items:center;justify-content:space-between;padding:14px 18px;border-bottom:1px solid #d5d9de">
+        <div style="font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:0.06em;text-transform:uppercase;color:#1f3a5f">Curriculum vitae</div>
+        <div style="display:flex;gap:18px;align-items:center;font-family:'JetBrains Mono',monospace;font-size:12.5px">
+          <a href="uploads/Resume_Ivan_Geisler.pdf" target="_blank" rel="noopener" style="border-bottom:1px solid #c8c4bc;padding-bottom:2px;white-space:nowrap">Open in new tab <span style="color:#1f3a5f">↗</span></a>
+          <a href="uploads/Resume_Ivan_Geisler.pdf" download="Ivan-Geisler-CV.pdf" style="border-bottom:1px solid #c8c4bc;padding-bottom:2px;white-space:nowrap">Download <span style="color:#1f3a5f">↓</span></a>
+          <button type="button" onClick="{{ closeCv }}" style="font-family:'JetBrains Mono',monospace;font-size:16px;line-height:1;background:none;border:1px solid #c7ccd3;color:#15181c;padding:5px 9px;cursor:pointer" style-hover="border-color:#1f3a5f;color:#1f3a5f" aria-label="Close">×</button>
+        </div>
+      </div>
+      <div style="flex:1;min-height:0;background:#f8f9fb">
+        <div id="cv-pages" style="height:100%;max-height:min(78vh,1000px);overflow:auto;padding:14px;display:flex;flex-direction:column;gap:14px;align-items:center">
+          <div style="padding:40px 24px;text-align:center;font-size:15px;color:#5a6068;line-height:1.6">Loading the CV…<br><a href="uploads/Resume_Ivan_Geisler.pdf" target="_blank" rel="noopener">Open it in a new tab ↗</a></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  </sc-if>
+
+  <footer style="max-width:820px;margin:80px auto 0;padding-top:16px;border-top:1px solid #d5d9de;display:flex;flex-wrap:wrap;gap:8px 24px;justify-content:space-between;font-size:12.5px;color:#5a6068">
+    <div>Ivan Geisler · 2026</div>
+    <div style="display:flex;gap:16px"><a href="uploads/Resume_Ivan_Geisler.pdf" onClick="{{ openCv }}">CV</a><a href="mailto:ivan2612@mit.edu">Email</a><a href="coursework.dc.html">Coursework</a></div>
+  </footer>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;showInProgressMarker&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Content&quot;},&quot;showCourseGrid&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Content&quot;}}">
+const IDS = ["projects", "education", "experience", "beyond"];
+
+class Component extends DCLogic {
+  state = { active: "projects", cvOpen: false };
+
+  componentDidMount() {
+    const seen = new Map();
+    this.observer = new IntersectionObserver((entries) => {
+      entries.forEach((e) => seen.set(e.target.id, e.isIntersecting ? e.intersectionRatio : 0));
+      let best = null, bestRatio = 0;
+      seen.forEach((ratio, id) => { if (ratio > bestRatio) { bestRatio = ratio; best = id; } });
+      if (best && best !== this.state.active) this.setState({ active: best });
+    }, { rootMargin: "-25% 0px -45% 0px", threshold: [0, 0.15, 0.4, 0.75, 1] });
+    IDS.forEach((id) => {
+      const el = document.getElementById(id);
+      if (el) this.observer.observe(el);
+    });
+    this.onKey = (e) => { if (e.key === "Escape" && this.state.cvOpen) { this._pdfDone = false; this._pdfTries = 0; this.setState({ cvOpen: false }); } };
+    document.addEventListener("keydown", this.onKey);
+  }
+
+  componentDidUpdate() {
+    if (this.state.cvOpen) this.renderPdf();
+  }
+
+  async renderPdf() {
+    const host = document.getElementById("cv-pages");
+    if (!host || this._pdfDone) return;
+    const lib = window.pdfjsLib;
+    if (!lib) {
+      this._pdfTries = (this._pdfTries || 0) + 1;
+      if (this._pdfTries < 40) setTimeout(() => this.renderPdf(), 150);
+      return;
+    }
+    this._pdfDone = true;
+    lib.GlobalWorkerOptions.workerSrc = "https://cdn.jsdelivr.net/npm/pdfjs-dist@3.11.174/build/pdf.worker.min.js";
+    try {
+      const doc = await lib.getDocument({
+        url: "uploads/Resume_Ivan_Geisler.pdf",
+        standardFontDataUrl: "https://cdn.jsdelivr.net/npm/pdfjs-dist@3.11.174/standard_fonts/",
+        cMapUrl: "https://cdn.jsdelivr.net/npm/pdfjs-dist@3.11.174/cmaps/",
+        cMapPacked: true,
+      }).promise;
+      const width = Math.max(240, Math.min(host.clientWidth - 44, 900));
+      const dpr = window.devicePixelRatio || 1;
+      host.innerHTML = "";
+      for (let i = 1; i <= doc.numPages; i++) {
+        const page = await doc.getPage(i);
+        const base = page.getViewport({ scale: 1 });
+        const vp = page.getViewport({ scale: (width / base.width) * dpr });
+        const canvas = document.createElement("canvas");
+        canvas.width = vp.width;
+        canvas.height = vp.height;
+        canvas.style.width = width + "px";
+        canvas.style.maxWidth = "100%";
+        canvas.style.boxSizing = "border-box";
+        canvas.style.height = vp.height / dpr + "px";
+        canvas.style.display = "block";
+        canvas.style.background = "#fff";
+        canvas.style.border = "1px solid #d5d9de";
+        host.appendChild(canvas);
+        await page.render({ canvasContext: canvas.getContext("2d"), viewport: vp, intent: "print" }).promise;
+      }
+    } catch (err) {
+      this._pdfDone = false;
+      const el = document.getElementById("cv-pages");
+      if (el) el.innerHTML = '<div style="padding:40px 24px;text-align:center;font-size:15px;color:#5a6068;line-height:1.6">The inline preview could not load.<br><a href="uploads/Resume_Ivan_Geisler.pdf" target="_blank" rel="noopener">Open the CV in a new tab \u2197</a></div>';
+    }
+  }
+
+  componentWillUnmount() {
+    if (this.observer) this.observer.disconnect();
+    document.removeEventListener("keydown", this.onKey);
+  }
+
+  renderVals() {
+    const rail = {};
+    IDS.forEach((id) => { rail[id] = this.state.active === id ? "#1f3a5f" : "#848a92"; });
+    return {
+      rail,
+      cvOpen: this.state.cvOpen,
+      openCv: (e) => { e.preventDefault(); this.setState({ cvOpen: true }); },
+      closeCv: () => { this._pdfDone = false; this._pdfTries = 0; this.setState({ cvOpen: false }); },
+      stopClose: (e) => e.stopPropagation(),
+      showInProgress: this.props.showInProgressMarker ?? true,
+      showCourseGrid: this.props.showCourseGrid ?? true,
+    };
+  }
+}
+</script>
+</body>
+</html>

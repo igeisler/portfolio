@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<title>S&amp;P 500 volume forecasting · Ivan Geisler</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,opsz,wght@0,8..60,300..600;1,8..60,300..600&family=Public+Sans:wght@400;500&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
+<style>
+html{scroll-behavior:smooth}
+body{margin:0;background:#edeef1;color:#15181c;-webkit-font-smoothing:antialiased}
+a{color:#1f3a5f;text-decoration:none}a:hover{color:#d97706;text-decoration:underline}
+.rail{display:none}
+@media(min-width:1380px){.rail{display:flex}}
+.backfix{display:none}
+@media(min-width:1100px){.backfix{display:block}.backtop{display:none}}
+.katex{font-size:1.02em}
+</style>
+</helmet>
+<div data-screen-label="Project" style="font-family:'Public Sans',sans-serif;font-size:16px;line-height:1.6;padding:40px 24px 56px">
+
+  <a class="backfix" href="index.dc.html" style="position:fixed;left:28px;top:30px;font-family:'JetBrains Mono',monospace;font-size:11.5px;letter-spacing:0.04em;color:#1f3a5f;z-index:6">← Main page</a>
+
+  <nav class="rail" style="position:fixed;left:28px;top:50%;transform:translateY(-50%);flex-direction:column;gap:12px;border-left:1px solid #d5d9de;padding:4px 0 4px 14px;z-index:5">
+    <a href="#question" style="font-family:'JetBrains Mono',monospace;font-size:11.5px;letter-spacing:0.04em;color:{{ rail.question }}">The question</a>
+    <a href="#setup" style="font-family:'JetBrains Mono',monospace;font-size:11.5px;letter-spacing:0.04em;color:{{ rail.setup }}">Setup</a>
+    <a href="#approach" style="font-family:'JetBrains Mono',monospace;font-size:11.5px;letter-spacing:0.04em;color:{{ rail.approach }}">Approach</a>
+    <a href="#results" style="font-family:'JetBrains Mono',monospace;font-size:11.5px;letter-spacing:0.04em;color:{{ rail.results }}">Results</a>
+    <a href="#hard" style="font-family:'JetBrains Mono',monospace;font-size:11.5px;letter-spacing:0.04em;color:{{ rail.hard }}">What was difficult</a>
+    <a href="#next" style="font-family:'JetBrains Mono',monospace;font-size:11.5px;letter-spacing:0.04em;color:{{ rail.next }}">Limits</a>
+  </nav>
+
+  <article style="max-width:760px;margin:0 auto">
+    <div style="display:flex;flex-wrap:wrap;gap:8px 20px;justify-content:space-between;align-items:baseline;margin-bottom:52px">
+      <a class="backtop" href="index.dc.html" style="font-family:'JetBrains Mono',monospace;font-size:13px">← Main page</a>
+      
+    </div>
+
+    <header>
+      <h1 style="font-family:'Source Serif 4',serif;font-weight:500;font-size:clamp(30px,5.5vw,40px);line-height:1.12;margin:0 0 14px;letter-spacing:-0.02em;text-wrap:pretty">Forecasting aggregate S&amp;P 500 trading volume</h1>
+      <p style="font-family:'Source Serif 4',serif;font-size:22px;line-height:1.4;margin:0 0 18px;color:#2e3339;text-wrap:pretty">Forecasting next-day aggregate volume from recent trading activity, calendar effects and market volatility.</p>
+      <div style="font-family:'JetBrains Mono',monospace;font-size:12.5px;color:#5a6068;display:flex;flex-wrap:wrap;gap:4px 10px"><span>Independent project</span><span style="color:#a8adb4">·</span><span>Time-series forecasting</span><span style="color:#a8adb4">·</span><span>Python, XGBoost, CRSP</span></div>
+    </header>
+
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,168px),1fr));gap:22px 28px;margin:44px 0 0;padding:24px 0;border-top:1px solid #15181c;border-bottom:1px solid #d5d9de">
+      <div>
+        <div style="font-family:'JetBrains Mono',monospace;font-size:11.5px;letter-spacing:0.04em;color:#5a6068;margin-bottom:9px">MSE reduction</div>
+        <div style="font-family:'JetBrains Mono',monospace;font-size:30px;line-height:1.05;letter-spacing:-0.02em">65.6%</div>
+        <div style="font-family:'JetBrains Mono',monospace;font-size:11.5px;color:#5a6068;margin-top:8px;line-height:1.45">vs persistence</div>
+      </div>
+      <div>
+        <div style="font-family:'JetBrains Mono',monospace;font-size:11.5px;letter-spacing:0.04em;color:#5a6068;margin-bottom:9px">Holdout RMSE</div>
+        <div style="font-family:'JetBrains Mono',monospace;font-size:30px;line-height:1.05;letter-spacing:-0.02em">0.357</div>
+        <div style="font-family:'JetBrains Mono',monospace;font-size:11.5px;color:#5a6068;margin-top:8px;line-height:1.45">bn shares, vs <span style="color:#d97706">0.608</span></div>
+      </div>
+      <div>
+        <div style="font-family:'JetBrains Mono',monospace;font-size:11.5px;letter-spacing:0.04em;color:#5a6068;margin-bottom:9px">Validation</div>
+        <div style="font-family:'JetBrains Mono',monospace;font-size:30px;line-height:1.05;letter-spacing:-0.02em">6 folds</div>
+        <div style="font-family:'JetBrains Mono',monospace;font-size:11.5px;color:#5a6068;margin-top:8px;line-height:1.45">expanding window, 2011–2016</div>
+      </div>
+      <div>
+        <div style="font-family:'JetBrains Mono',monospace;font-size:11.5px;letter-spacing:0.04em;color:#5a6068;margin-bottom:9px">Final test</div>
+        <div style="font-family:'JetBrains Mono',monospace;font-size:17px;line-height:1.25;letter-spacing:-0.01em">2017–2018</div>
+        <div style="font-family:'JetBrains Mono',monospace;font-size:11.5px;color:#5a6068;margin-top:8px;line-height:1.45">scored once</div>
+      </div>
+    </div>
+
+    <section id="question" style="margin-top:56px;scroll-margin-top:32px">
+      <div style="font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:0.06em;text-transform:uppercase;color:#1f3a5f;margin-bottom:12px">The question</div>
+      <p style="margin:0 0 16px;font-size:17px;text-wrap:pretty">I wanted to forecast next-day aggregate trading volume across S&amp;P 500 constituents using only information available by the previous close. The natural benchmark is simple but difficult to beat: trading volume is persistent, so today's level already contains substantial information about tomorrow's.</p>
+      <p style="margin:0 0 16px;font-size:17px;text-wrap:pretty">Raw share volume, however, is a difficult target over a long sample. Index membership changes, stock splits mechanically alter share counts, and the overall level of market activity shifts considerably through time. A model fitted directly to that level can therefore spend much of its capacity learning long-run changes rather than forecasting tomorrow.</p>
+      <p style="margin:0;font-size:17px;text-wrap:pretty">The project therefore has two parts: first construct a more stable forecasting target, then test whether a flexible nonlinear model adds meaningfully to a compact statistical time-series model.</p>
+    </section>
+
+    <section id="setup" style="margin-top:44px;scroll-margin-top:32px">
+      <div style="font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:0.06em;text-transform:uppercase;color:#1f3a5f;margin-bottom:12px">Setup</div>
+      <p style="margin:0 0 16px;font-size:17px;text-wrap:pretty">Rather than forecast raw volume directly, I modelled log volume relative to its trailing one-year level:</p>
+      <p style="margin:0 0 16px;font-size:17px;text-wrap:pretty;overflow-x:auto;overflow-y:hidden">\[ y_t = \log V_t - \frac{1}{252}\sum_{i=1}^{252} \log V_{t-i}. \]</p>
+      <p style="margin:0;font-size:17px;text-wrap:pretty">The transformation is strictly backward-looking. Taking logs stabilises the scale, while subtracting the previous 252-day mean of log volume removes much of the slow movement in the market-wide level. The remaining series is centred around zero and leaves shorter-run variation for the models to forecast.</p>
+
+      <figure style="margin:32px 0 0">
+        <picture>
+          <source media="(max-width:640px)" srcset="uploads/fig1_volume_target@mobile-658cbc5d.png">
+          <img src="uploads/fig1_volume_target-6b75b676.png" width="760" height="612" loading="lazy" decoding="async" alt="Two stacked time-series panels sharing a date axis from 2001 to 2016, both drawn in slate grey. The top panel is raw aggregate S&P 500 trading volume in billions of shares, rising from about 1bn in 2001 to a peak above 11bn in 2008-09 and settling near 3 to 4bn thereafter, with the crisis window shaded. The bottom panel is the transformed target: the same series expressed against its trailing 252-day mean, which oscillates around zero across the whole sample with no visible trend, roughly between -1.5 and 1." style="display:block;width:100%;height:auto">
+        </picture>
+        <figcaption style="font-size:13px;color:#5a6068;margin-top:10px;line-height:1.5;text-wrap:pretty"><span style="font-family:'JetBrains Mono',monospace">Fig. 1</span>. Raw aggregate volume changes substantially over the sample. Expressing log volume relative to its trailing one-year mean removes much of that slow drift while preserving shorter-run movements for forecasting. The shaded region marks the 2008–09 financial crisis.</figcaption>
+      </figure>
+
+      <p style="margin:30px 0 0;font-size:17px;text-wrap:pretty">The transformation also changes the series' autocorrelation mechanically. I therefore treat persistence in the transformed target as useful for forecasting, but not as evidence that raw trading volume necessarily follows a structural long-memory process.</p>
+    </section>
+
+    <section id="approach" style="margin-top:44px;scroll-margin-top:32px">
+      <div style="font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:0.06em;text-transform:uppercase;color:#1f3a5f;margin-bottom:12px">Approach</div>
+      <p style="margin:0 0 16px;font-size:17px;text-wrap:pretty">Pre-holdout analysis suggested three useful sources of information: the target's own recent history, recurring calendar effects, and the recent market-volatility state, including lagged VIX and absolute market returns.</p>
+      <p style="margin:0 0 20px;font-size:17px;text-wrap:pretty">I then compared two deliberately different forecasting models using these same broad information sources.</p>
+      <div style="display:grid;gap:16px;margin:0;border-top:1px solid #d5d9de;padding-top:18px">
+        <div style="display:flex;flex-wrap:wrap;gap:4px 18px">
+          <div style="flex:0 0 132px;display:flex;align-items:center;gap:8px;font-family:'JetBrains Mono',monospace;font-size:12.5px;color:#a83f43;padding-top:3px"><span style="width:14px;height:3px;flex:0 0 14px;background:#c44e52"></span>ARFIMAX-GARCH</div>
+          <p style="flex:1 1 320px;margin:0;font-size:16.5px;text-wrap:pretty">A compact statistical time-series model. Fractional differencing captures persistent dependence in the transformed target, autoregressive and external predictors capture shorter-run effects, and GARCH allows residual volatility to change through time. The specification and feature set were kept deliberately small.</p>
+        </div>
+        <div style="display:flex;flex-wrap:wrap;gap:4px 18px">
+          <div style="flex:0 0 132px;display:flex;align-items:center;gap:8px;font-family:'JetBrains Mono',monospace;font-size:12.5px;color:#3f5f96;padding-top:3px"><span style="width:14px;height:3px;flex:0 0 14px;background:#4c72b0"></span>XGBoost</div>
+          <p style="flex:1 1 320px;margin:0;font-size:16.5px;text-wrap:pretty">A nonlinear tree-based alternative. XGBoost can learn thresholds and interactions automatically: it can allow the effect of recent volume to depend on the current volatility state, for instance. I compared a lean specification with a larger version containing additional volatility lags and rolling statistics.</p>
+        </div>
+      </div>
+      <div style="font-family:'JetBrains Mono',monospace;font-size:11.5px;letter-spacing:0.05em;text-transform:uppercase;color:#15181c;margin:34px 0 12px;border-top:1px solid #d5d9de;padding-top:18px">Validation design</div>
+      <p style="margin:0 0 16px;font-size:17px;text-wrap:pretty">Model development used six expanding-window validation blocks from 2011–2016. At each step, the model was fitted only on earlier observations and then produced one-step-ahead forecasts as new lagged information became available.</p>
+      <p style="margin:0 0 16px;font-size:17px;text-wrap:pretty">The initial feature families were informed by exploratory analysis of the broader pre-2017 sample, so I treat these folds as development evidence rather than an untouched estimate of generalisation. The cleaner test is the 2017–2018 holdout, which was left unused during model selection and scored once.</p>
+      <p style="margin:0 0 16px;font-size:17px;text-wrap:pretty">All models were ultimately compared in the original units of billions of shares and against the same persistence benchmark:</p>
+      <p style="margin:0;font-size:17px;text-wrap:pretty;overflow-x:auto;overflow-y:hidden">\[ \widehat V_{t+1}=V_t. \]</p>
+    </section>
+
+    <section id="results" style="margin-top:44px;scroll-margin-top:32px">
+      <div style="font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:0.06em;text-transform:uppercase;color:#1f3a5f;margin-bottom:12px">Results</div>
+      <p style="font-family:'Source Serif 4',serif;font-size:20px;line-height:1.45;margin:0 0 24px;text-wrap:pretty">Both models beat persistence by a wide margin. XGBoost performed best, but only narrowly.</p>
+      <div style="overflow-x:auto">
+        <table style="width:100%;border-collapse:collapse;font-size:14px;min-width:520px">
+          <thead>
+            <tr>
+              <th style="text-align:left;font-family:'JetBrains Mono',monospace;font-size:11px;font-weight:400;letter-spacing:0.04em;color:#5a6068;padding:0 14px 10px 0;border-bottom:1px solid #15181c">Model</th>
+              <th style="text-align:right;font-family:'JetBrains Mono',monospace;font-size:11px;font-weight:400;letter-spacing:0.04em;color:#5a6068;padding:0 0 10px 14px;border-bottom:1px solid #15181c">Dev CV MSE (bn²)</th>
+              <th style="text-align:right;font-family:'JetBrains Mono',monospace;font-size:11px;font-weight:400;letter-spacing:0.04em;color:#5a6068;padding:0 0 10px 14px;border-bottom:1px solid #15181c">Holdout MSE (bn²)</th>
+              <th style="text-align:right;font-family:'JetBrains Mono',monospace;font-size:11px;font-weight:400;letter-spacing:0.04em;color:#5a6068;padding:0 0 10px 14px;border-bottom:1px solid #15181c">Holdout RMSE (bn)</th>
+              <th style="text-align:right;font-family:'JetBrains Mono',monospace;font-size:11px;font-weight:400;letter-spacing:0.04em;color:#5a6068;padding:0 0 10px 14px;border-bottom:1px solid #15181c">vs persistence</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td style="padding:12px 14px 12px 0;border-bottom:1px solid #e2e5ea">XGBoost, lean features</td>
+              <td style="text-align:right;font-family:'JetBrains Mono',monospace;padding:12px 0 12px 14px;border-bottom:1px solid #e2e5ea;color:#1f3a5f">0.2406</td>
+              <td style="text-align:right;font-family:'JetBrains Mono',monospace;padding:12px 0 12px 14px;border-bottom:1px solid #e2e5ea;color:#1f3a5f">0.1273</td>
+              <td style="text-align:right;font-family:'JetBrains Mono',monospace;padding:12px 0 12px 14px;border-bottom:1px solid #e2e5ea;color:#1f3a5f">0.357</td>
+              <td style="text-align:right;font-family:'JetBrains Mono',monospace;padding:12px 0 12px 14px;border-bottom:1px solid #e2e5ea;color:#1f3a5f">−65.6%</td>
+            </tr>
+            <tr>
+              <td style="padding:12px 14px 12px 0;border-bottom:1px solid #e2e5ea">ARFIMAX-GARCH</td>
+              <td style="text-align:right;font-family:'JetBrains Mono',monospace;padding:12px 0 12px 14px;border-bottom:1px solid #e2e5ea">0.2412</td>
+              <td style="text-align:right;font-family:'JetBrains Mono',monospace;padding:12px 0 12px 14px;border-bottom:1px solid #e2e5ea">0.1348</td>
+              <td style="text-align:right;font-family:'JetBrains Mono',monospace;padding:12px 0 12px 14px;border-bottom:1px solid #e2e5ea">0.367</td>
+              <td style="text-align:right;font-family:'JetBrains Mono',monospace;padding:12px 0 12px 14px;border-bottom:1px solid #e2e5ea">−63.5%</td>
+            </tr>
+            <tr>
+              <td style="padding:12px 14px 12px 0;color:#5a6068">Persistence</td>
+              <td style="text-align:right;font-family:'JetBrains Mono',monospace;padding:12px 0 12px 14px;color:#5a6068">0.4483</td>
+              <td style="text-align:right;font-family:'JetBrains Mono',monospace;padding:12px 0 12px 14px;color:#5a6068">0.3695</td>
+              <td style="text-align:right;font-family:'JetBrains Mono',monospace;padding:12px 0 12px 14px;color:#5a6068">0.608</td>
+              <td style="text-align:right;font-family:'JetBrains Mono',monospace;padding:12px 0 12px 14px;color:#a8adb4">n/a</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <p style="margin:22px 0 0;font-size:17px;text-wrap:pretty">On the final holdout, XGBoost achieved an RMSE of 0.357 billion shares, compared with 0.367 for ARFIMAX-GARCH and 0.608 for simply carrying today's volume forward. In MSE terms, the two models reduced persistence error by 65.6% and 63.5%, respectively.</p>
+
+      <figure style="margin:32px 0 0">
+        <picture>
+          <source media="(max-width:640px)" srcset="uploads/fig2_test_overlay@mobile.png">
+          <img src="uploads/fig2_test_overlay.png" width="760" height="671" loading="lazy" decoding="async" alt="Two stacked panels covering the 2017 to 2018 holdout, each plotting realised daily aggregate volume in billions of shares in black against one model's one-step-ahead forecast. The top panel is ARFIMAX-GARCH in red, the bottom is XGBoost in blue. Both track the day-to-day variation closely and are nearly indistinguishable from each other, and both undershoot the largest upward spikes while overshooting some of the holiday troughs." style="display:block;width:100%;height:auto">
+        </picture>
+        <figcaption style="font-size:13px;color:#5a6068;margin-top:10px;line-height:1.5;text-wrap:pretty"><span style="font-family:'JetBrains Mono',monospace">Fig. 2</span>. One-step-ahead forecasts over the 2017–2018 holdout. <span style="color:#a83f43">ARFIMAX-GARCH</span> is shown above and <span style="color:#3f5f96">XGBoost</span> below. The two forecasts are very similar: both track ordinary day-to-day variation well and miss many of the same unusually high and low-volume days.</figcaption>
+      </figure>
+      <p style="margin:26px 0 16px;font-size:17px;text-wrap:pretty">The similarity is also visible during development, where the two models' MSEs differed by only 0.0006 bn². With only two holdout years and serially dependent daily observations, I do not interpret XGBoost's small lead as evidence that nonlinear models are generally superior. The stronger result is that two very different modelling approaches extracted almost the same predictive structure from the data.</p>
+      <p style="margin:0;font-size:17px;text-wrap:pretty">Additional complexity did not help. Expanding XGBoost's feature set worsened development MSE from 0.2406 to 0.2456, while an explicit volatility interaction did not improve the best parametric specification. The evidence therefore favours a compact set of predictors built around recent volume, calendar effects and market volatility.</p>
+    </section>
+
+    <section id="hard" style="margin-top:44px;scroll-margin-top:32px">
+      <div style="font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:0.06em;text-transform:uppercase;color:#1f3a5f;margin-bottom:12px">What was difficult</div>
+      <p style="margin:0 0 16px;font-size:17px;text-wrap:pretty">The first challenge was separating useful target engineering from structural interpretation. The trailing normalisation makes volume easier to model, but it also changes the dependence structure of the series. Persistence after the transformation is therefore useful for forecasting without necessarily telling us that raw trading volume itself has long memory.</p>
+      <p style="margin:0;font-size:17px;text-wrap:pretty">The second issue appears when forecasts are converted back from log space into shares. That conversion requires a variance correction: ARFIMAX-GARCH supplies a time-varying conditional variance, while XGBoost uses a constant residual-variance adjustment. Both are approximations because the forecast errors are asymmetric and heavy-tailed. Together with the models' tendency to miss the largest volume spikes, this means I view them as strong conditional-mean forecasters, not complete models of the distribution of future volume.</p>
+    </section>
+
+    <section id="next" style="margin-top:44px;scroll-margin-top:32px">
+      <div style="font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:0.06em;text-transform:uppercase;color:#1f3a5f;margin-bottom:12px">Limits and what's next</div>
+      <p style="margin:0 0 16px;font-size:17px;text-wrap:pretty">The final 2017–2018 holdout was calmer than much of the development period, so its absolute error levels may be favourable. Raw share volume is also sensitive to stock splits and changing index composition. A useful robustness check would repeat the exercise using dollar volume or turnover relative to shares outstanding.</p>
+      <p style="margin:0;font-size:17px;text-wrap:pretty">The more interesting extension is distributional forecasting. Both models struggle most on extreme-volume days, so quantile or probabilistic forecasts could estimate the likelihood and size of those events directly rather than treating them simply as large point-forecast errors.</p>
+    </section>
+
+  </article>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+const IDS = ["question", "setup", "approach", "results", "hard", "next"];
+
+class Component extends DCLogic {
+  state = { active: "question" };
+
+  componentDidMount() {
+    const seen = new Map();
+    this.observer = new IntersectionObserver((entries) => {
+      entries.forEach((e) => seen.set(e.target.id, e.isIntersecting ? e.intersectionRatio : 0));
+      let best = null, bestRatio = 0;
+      seen.forEach((ratio, id) => { if (ratio > bestRatio) { bestRatio = ratio; best = id; } });
+      if (best && best !== this.state.active) this.setState({ active: best });
+    }, { rootMargin: "-20% 0px -45% 0px", threshold: [0, 0.15, 0.4, 0.75, 1] });
+    IDS.forEach((id) => {
+      const el = document.getElementById(id);
+      if (el) this.observer.observe(el);
+    });
+    this.renderMath();
+  }
+
+  componentDidUpdate() {
+    clearTimeout(this._mathTimer);
+    this._mathTimer = setTimeout(() => this.renderMath(), 0);
+  }
+
+  renderMath(tries) {
+    const n = tries || 0;
+    if (window.renderMathInElement) {
+      window.renderMathInElement(document.body, {
+        delimiters: [
+          { left: "\\[", right: "\\]", display: true },
+          { left: "\\(", right: "\\)", display: false },
+        ],
+        throwOnError: false,
+      });
+    } else if (n < 40) {
+      setTimeout(() => this.renderMath(n + 1), 150);
+    }
+  }
+
+  componentWillUnmount() {
+    if (this.observer) this.observer.disconnect();
+    clearTimeout(this._mathTimer);
+  }
+
+  renderVals() {
+    const rail = {};
+    IDS.forEach((id) => { rail[id] = this.state.active === id ? "#1f3a5f" : "#848a92"; });
+    return { rail };
+  }
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<title>Sparse S&amp;P 500 index tracking · Ivan Geisler</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,opsz,wght@0,8..60,300..600;1,8..60,300..600&family=Public+Sans:wght@400;500&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
+<style>
+html{scroll-behavior:smooth}
+body{margin:0;background:#edeef1;color:#15181c;-webkit-font-smoothing:antialiased}
+a{color:#1f3a5f;text-decoration:none}a:hover{color:#d97706;text-decoration:underline}
+.rail{display:none}
+@media(min-width:1380px){.rail{display:flex}}
+.backfix{display:none}
+@media(min-width:1100px){.backfix{display:block}.backtop{display:none}}
+.katex{font-size:1.02em}
+</style>
+</helmet>
+<div data-screen-label="Project" style="font-family:'Public Sans',sans-serif;font-size:16px;line-height:1.6;padding:40px 24px 56px">
+
+  <a class="backfix" href="index.dc.html" style="position:fixed;left:28px;top:30px;font-family:'JetBrains Mono',monospace;font-size:11.5px;letter-spacing:0.04em;color:#1f3a5f;z-index:6">← Main page</a>
+
+  <nav class="rail" style="position:fixed;left:28px;top:50%;transform:translateY(-50%);flex-direction:column;gap:12px;border-left:1px solid #d5d9de;padding:4px 0 4px 14px;z-index:5">
+    <a href="#question" style="font-family:'JetBrains Mono',monospace;font-size:11.5px;letter-spacing:0.04em;color:{{ rail.question }}">The question</a>
+    <a href="#setup" style="font-family:'JetBrains Mono',monospace;font-size:11.5px;letter-spacing:0.04em;color:{{ rail.setup }}">Setup</a>
+    <a href="#approach" style="font-family:'JetBrains Mono',monospace;font-size:11.5px;letter-spacing:0.04em;color:{{ rail.approach }}">Approach</a>
+    <a href="#results" style="font-family:'JetBrains Mono',monospace;font-size:11.5px;letter-spacing:0.04em;color:{{ rail.results }}">Results</a>
+    <a href="#hard" style="font-family:'JetBrains Mono',monospace;font-size:11.5px;letter-spacing:0.04em;color:{{ rail.hard }}">What was difficult</a>
+    <a href="#next" style="font-family:'JetBrains Mono',monospace;font-size:11.5px;letter-spacing:0.04em;color:{{ rail.next }}">Limits</a>
+  </nav>
+
+  <article style="max-width:760px;margin:0 auto">
+    <div style="display:flex;flex-wrap:wrap;gap:8px 20px;justify-content:space-between;align-items:baseline;margin-bottom:52px">
+      <a class="backtop" href="index.dc.html" style="font-family:'JetBrains Mono',monospace;font-size:13px">← Main page</a>
+      
+    </div>
+
+    <header>
+      <h1 style="font-family:'Source Serif 4',serif;font-weight:500;font-size:clamp(30px,5.5vw,40px);line-height:1.12;margin:0 0 14px;letter-spacing:-0.02em;text-wrap:pretty">Sparse S&amp;P 500 index tracking</h1>
+      <p style="font-family:'Source Serif 4',serif;font-size:22px;line-height:1.4;margin:0 0 18px;color:#2e3339;text-wrap:pretty">Replicating the index with 30 stocks: which covariance estimator should feed the optimiser, and can you trust its risk forecast out of sample?</p>
+      <div style="font-family:'JetBrains Mono',monospace;font-size:12.5px;color:#5a6068;display:flex;flex-wrap:wrap;gap:4px 10px"><span>MIT 15.C57</span><span style="color:#a8adb4">·</span><span>2026</span><span style="color:#a8adb4">·</span><span>Python, Gurobi, CRSP</span></div>
+    </header>
+
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,168px),1fr));gap:22px 28px;margin:44px 0 0;padding:24px 0;border-top:1px solid #15181c;border-bottom:1px solid #d5d9de">
+      <div>
+        <div style="font-family:'JetBrains Mono',monospace;font-size:11.5px;letter-spacing:0.04em;color:#5a6068;margin-bottom:9px">Basket size</div>
+        <div style="font-family:'JetBrains Mono',monospace;font-size:30px;line-height:1.05;letter-spacing:-0.02em">30</div>
+        <div style="font-family:'JetBrains Mono',monospace;font-size:11.5px;color:#5a6068;margin-top:8px;line-height:1.45">of ~500 index members</div>
+      </div>
+      <div>
+        <div style="font-family:'JetBrains Mono',monospace;font-size:11.5px;letter-spacing:0.04em;color:#5a6068;margin-bottom:9px">Tracking error</div>
+        <div style="font-family:'JetBrains Mono',monospace;font-size:30px;line-height:1.05;letter-spacing:-0.02em;color:#96600d">2.59%</div>
+        <div style="font-family:'JetBrains Mono',monospace;font-size:11.5px;color:#5a6068;margin-top:8px;line-height:1.45">vs <span style="color:#5f6b7a">5.32%</span> naive top-30</div>
+      </div>
+      <div>
+        <div style="font-family:'JetBrains Mono',monospace;font-size:11.5px;letter-spacing:0.04em;color:#5a6068;margin-bottom:9px">Risk-forecast ratio</div>
+        <div style="font-family:'JetBrains Mono',monospace;font-size:30px;line-height:1.05;letter-spacing:-0.02em;color:#96600d">0.95</div>
+        <div style="font-family:'JetBrains Mono',monospace;font-size:11.5px;color:#5a6068;margin-top:8px;line-height:1.45">realised ÷ predicted, vs 1.15–1.30 for the others</div>
+      </div>
+      <div>
+        <div style="font-family:'JetBrains Mono',monospace;font-size:11.5px;letter-spacing:0.04em;color:#5a6068;margin-bottom:9px">Holdout</div>
+        <div style="font-family:'JetBrains Mono',monospace;font-size:30px;line-height:1.05;letter-spacing:-0.02em">40</div>
+        <div style="font-family:'JetBrains Mono',monospace;font-size:11.5px;color:#5a6068;margin-top:8px;line-height:1.45">quarters, 2015–2024, scored once</div>
+      </div>
+    </div>
+
+    <section id="question" style="margin-top:56px;scroll-margin-top:32px">
+      <div style="font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:0.06em;text-transform:uppercase;color:#1f3a5f;margin-bottom:12px">The question</div>
+      <p style="margin:0 0 16px;font-size:17px;text-wrap:pretty">An index tracker tries to match the return of the S&amp;P 500. The simplest way is to hold every stock in the index at roughly its benchmark weight; here, the question is how closely we can track it while holding only 30. The optimiser therefore has to choose both which 30 stocks to hold and how much weight to give each one, with the aim of minimising tracking error, the volatility of the portfolio's return relative to the index.</p>
+      <p style="margin:0 0 16px;font-size:17px;text-wrap:pretty">To make that choice, the optimiser needs a covariance matrix, \(\Sigma\), describing how the stocks move together. If \(\Sigma\) were known, the optimisation problem is standard. In practice it has to be estimated from historical returns, and that is the difficult part. With \(N \approx 500\) stocks and only \(T=504\) daily observations, roughly 125,000 distinct covariance entries are being estimated from two years of data. At \(N/T \approx 1\), the sample covariance is noisy, particularly in its smallest eigenvalues, which are exactly the directions to which a minimum-variance optimiser is most sensitive.</p>
+      <p style="margin:0;font-size:17px;text-wrap:pretty">So the experiment holds the portfolio problem fixed and changes only the estimate \(\hat{\Sigma}\). The question is whether a better covariance estimate produces lower realised tracking error and better-calibrated risk forecasts out of sample. Both matter: a tracker that performs well but systematically understates its risk is difficult to use for risk budgeting.</p>
+    </section>
+
+    <section id="setup" style="margin-top:44px;scroll-margin-top:32px">
+      <div style="font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:0.06em;text-transform:uppercase;color:#1f3a5f;margin-bottom:12px">Setup</div>
+      <p style="margin:0 0 16px;font-size:17px;text-wrap:pretty">Everything is point-in-time, using CRSP daily stock returns and S&amp;P 500 membership data from 2003–2024, with survivorship and delisting bias handled explicitly. Historical add and drop dates reconstruct the constituent set on each day, benchmark weights are based on previous-close market capitalisations, and delisting returns are included in each stock's final observation.</p>
+      <p style="margin:0 0 16px;font-size:17px;text-wrap:pretty">Because every result is measured against this reconstructed benchmark, I checked it against CRSP's published value-weighted total-return series. The mean difference is just \(-0.0039\%\) per year, effectively zero, so later tracking error is not being driven by errors in the benchmark reconstruction.</p>
+      <p style="margin:0;font-size:17px;text-wrap:pretty">The backtest is a quarterly walk-forward over 80 rebalances with a one-day implementation lag. The first 40 rebalances, from 2005–2014, are used for development; the final 40, from 2015–2024, form a frozen holdout that is scored once after the configurations are fixed.</p>
+    </section>
+
+    <section id="approach" style="margin-top:44px;scroll-margin-top:32px">
+      <div style="font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:0.06em;text-transform:uppercase;color:#1f3a5f;margin-bottom:12px">Approach</div>
+      <p style="margin:0 0 16px;font-size:17px;text-wrap:pretty">At each rebalance I solve one cardinality-constrained mixed-integer quadratic programme, minimising active variance</p>
+      <p style="margin:0 0 16px;font-size:17px;text-wrap:pretty;overflow-x:auto;overflow-y:hidden">\[ \min_{w,\,z}\; (w - b)^{\top} \hat{\Sigma} (w - b) \]</p>
+      <p style="margin:0 0 16px;font-size:17px;text-wrap:pretty;overflow-x:auto;overflow-y:hidden">\[ \begin{aligned} \text{s.t.}\quad &amp;\textstyle\sum_{i} w_i = 1, \qquad z_i \in \{0,1\} &amp;&amp;\textsf{\footnotesize fully invested} \\[8pt] &amp;0 \le w_i \le 0.10\, z_i &amp;&amp;\textsf{\footnotesize long-only, position cap} \\[8pt] &amp;\textstyle\sum_{i} z_i \le K = 30 &amp;&amp;\textsf{\footnotesize cardinality} \\[8pt] &amp;\tfrac{1}{2}\textstyle\sum_{i} \lvert w_i - w_i^{\text{drift}} \rvert \le 0.30 &amp;&amp;\textsf{\footnotesize turnover cap} \end{aligned} \]</p>
+      <p style="margin:0 0 16px;font-size:17px;text-wrap:pretty">Turnover is measured against drifted pre-trade weights \(w^{\text{drift}}\). Every constraint is fixed by design rather than tuned, and the same programme runs for all four estimators; only \(\hat{\Sigma}\) changes.</p>
+      <p style="margin:0 0 20px;font-size:17px;text-wrap:pretty">The estimators form a ladder of increasing intervention in the eigenvalue spectrum:</p>
+      <div style="display:grid;gap:16px;margin:0 0 4px;border-top:1px solid #d5d9de;padding-top:18px">
+        <div style="display:flex;flex-wrap:wrap;gap:4px 18px">
+          <div style="flex:0 0 132px;display:flex;align-items:center;gap:8px;font-family:'JetBrains Mono',monospace;font-size:12.5px;color:#a83f43;padding-top:3px"><span style="width:14px;height:3px;flex:0 0 14px;background:#c44e52"></span>E0 · sample</div>
+          <p style="flex:1 1 320px;margin:0;font-size:16.5px;text-wrap:pretty">Sample covariance. No regularisation, no tuning knobs. The control: how much do the regularisers add over doing nothing?</p>
+        </div>
+        <div style="display:flex;flex-wrap:wrap;gap:4px 18px">
+          <div style="flex:0 0 132px;display:flex;align-items:center;gap:8px;font-family:'JetBrains Mono',monospace;font-size:12.5px;color:#3f5f96;padding-top:3px"><span style="width:14px;height:3px;flex:0 0 14px;background:#4c72b0"></span>E1 · linear</div>
+          <p style="flex:1 1 320px;margin:0;font-size:16.5px;text-wrap:pretty">Ledoit–Wolf linear shrinkage toward a constant-correlation target. One global intensity, closed-form and recomputed each window, moving every eigenvalue the same fraction toward the target.</p>
+        </div>
+        <div style="display:flex;flex-wrap:wrap;gap:4px 18px">
+          <div style="flex:0 0 132px;display:flex;align-items:center;gap:8px;font-family:'JetBrains Mono',monospace;font-size:12.5px;color:#3b7a4b;padding-top:3px"><span style="width:14px;height:3px;flex:0 0 14px;background:#55a868"></span>E2 · PCA</div>
+          <p style="flex:1 1 320px;margin:0;font-size:16.5px;text-wrap:pretty">PCA truncation in correlation space. Keep the top \(k\) eigenvectors and restore the missing residual through \(\mathrm{diag}(C - C_k)\), giving \(k\) common factors plus stock-specific risk. \(k = 5\) is the only tuned parameter in the project, fixed on development before 2015.</p>
+        </div>
+        <div style="display:flex;flex-wrap:wrap;gap:4px 18px">
+          <div style="flex:0 0 132px;display:flex;align-items:center;gap:8px;font-family:'JetBrains Mono',monospace;font-size:12.5px;color:#96600d;padding-top:3px"><span style="width:14px;height:3px;flex:0 0 14px;background:#e8871a"></span>E3 · nonlinear</div>
+          <p style="flex:1 1 320px;margin:0;font-size:16.5px;text-wrap:pretty">Analytical nonlinear shrinkage (Ledoit–Wolf 2020). Each eigenvalue gets its own correction: the market direction passes through nearly intact while the crowded noise bulk is compressed toward the middle. Tuning-free, and valid at \(N/T \approx 1\).</p>
+        </div>
+        <div style="display:flex;flex-wrap:wrap;gap:4px 18px;border-top:1px solid #d5d9de;padding-top:18px;margin-top:4px">
+          <div style="flex:0 0 132px;display:flex;align-items:center;gap:8px;font-family:'JetBrains Mono',monospace;font-size:12.5px;color:#5f6b7a;padding-top:3px"><span style="width:14px;flex:0 0 14px;border-top:3px dashed #8a96a8"></span>B0 · baseline</div>
+          <p style="flex:1 1 320px;margin:0;font-size:16.5px;text-wrap:pretty">Not an estimator, and not in the spectra below: the naive tracker simply holds the thirty largest benchmark names, renormalised, with no optimisation at all. It runs through identical drift and exit accounting, so the only difference is how the thirty were chosen.</p>
+        </div>
+      </div>
+      <figure style="margin:60px 0 0">
+        <picture>
+          <source media="(max-width:640px)" srcset="uploads/fig1_spectrum@mobile.png">
+          <img src="uploads/fig1_spectrum.png" width="760" height="519" loading="lazy" decoding="async" alt="Four stacked histograms of the covariance eigenvalues for the 504-day window ending 2019-12-31, one per estimator, binned on log eigenvalue with a log count axis. Each panel shows the sample spectrum as a grey silhouette behind its own estimator. The sample spectrum sprawls down to 1e-9, while E1, E2 and E3 each compress the bulk into a narrow pile with a hard floor; the market eigenvalue stays in the same place at the far right in all four panels." style="display:block;width:100%;height:auto">
+        </picture>
+        <figcaption style="font-size:13px;color:#5a6068;margin-top:10px;line-height:1.5;text-wrap:pretty"><span style="font-family:'JetBrains Mono',monospace">Fig. 1</span>. Sample eigenvalue spectrum against the Marchenko–Pastur edge. About 98% of the ~500 eigenvalues sit inside the noise bulk, in every window of the decade.</figcaption>
+      </figure>
+
+    </section>
+
+    <section id="results" style="margin-top:44px;scroll-margin-top:32px">
+      <div style="font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:0.06em;text-transform:uppercase;color:#1f3a5f;margin-bottom:12px">Results</div>
+      <p style="margin:0 0 16px;font-size:17px;text-wrap:pretty">Fig. 1 showed that the regularised estimators mainly differ in how they treat the noisy lower end of the covariance spectrum. Out of sample, that matters. B0, which simply holds the 30 largest index members, produces 5.32% annualised tracking error. Using the covariance structure to optimise the basket cuts this to about 3%, and E3 improves it further to 2.59%. The main gain therefore comes from optimisation; better covariance estimation provides an additional, economically meaningful improvement.</p>
+      <p style="margin:0 0 16px;font-size:17px;text-wrap:pretty">That second improvement is comparable to adding many more stocks. With E2, increasing the portfolio from 30 to 100 names lowers tracking error by 0.74 percentage points; switching from E2 to E3 at 30 names lowers it by 0.44 points. Better covariance estimation therefore captures about 60% of the benefit of more than tripling the portfolio size.</p>
+      <p style="margin:0 0 16px;font-size:17px;text-wrap:pretty">The estimators separate more clearly on risk calibration. At each rebalance I compare predicted tracking error with what was realised over the next quarter; a realised-to-predicted ratio of 1 means the forecast was right on average. E3 comes in at 0.95, while E1 and E2 are around 1.15–1.17 and E0 reaches 1.30. In other words, the other estimators systematically understate risk. E0 is the clearest failure: its predicted-realised correlation is essentially zero, so its forecast barely responds as realised risk changes. E3 is much better calibrated, although none of the estimators predicts quarter-to-quarter changes especially strongly.</p>
+      <figure style="margin:32px 0 0">
+        <picture>
+          <source media="(max-width:640px)" srcset="uploads/fig2_calibration@mobile.png">
+          <img src="uploads/fig2_calibration.png" width="760" height="407" loading="lazy" decoding="async" alt="Predicted and realised quarterly tracking error for E0 and E3 across the 40 holdout quarters. E0's predicted line is nearly flat while its realised line swings widely; E3's two lines move together." style="display:block;width:100%;height:auto">
+        </picture>
+        <figcaption style="font-size:13px;color:#5a6068;margin-top:10px;line-height:1.5;text-wrap:pretty">
+          <span style="font-family:'JetBrains Mono',monospace">Fig. 2</span>. Predicted versus realised next-quarter tracking error. E0's forecast remains almost flat as realised risk changes; E3 is much better calibrated and responds more clearly to large shifts in risk, particularly around 2020.
+        </figcaption>
+      </figure>
+      <p style="margin:26px 0 0;font-size:17px;text-wrap:pretty">The result is also stable across market regimes. COVID roughly doubles tracking error for every estimator, but 2022 has little effect on the optimised portfolios while B0 deteriorates materially. Fig. 3 tells the same story over the full decade: the optimised trackers remain close to the index, whereas B0 drifts far above it because of its concentration in mega-cap stocks. For an index tracker, that relative gain is tracking error rather than success.</p>
+      <figure style="margin:32px 0 0">
+        <picture>
+          <source media="(max-width:640px)" srcset="uploads/fig3_relative_wealth@mobile-931c2715.png">
+          <img src="uploads/fig3_relative_wealth-439752be.png" width="760" height="362" loading="lazy" decoding="async" alt="Cumulative relative wealth against the index for the naive baseline and the four estimators over 2015-2024. The four optimised trackers stay within a few percent of flat while the naive top-30 baseline drifts to about +35 percent." style="display:block;width:100%;height:auto">
+        </picture>
+        <figcaption style="font-size:13px;color:#5a6068;margin-top:10px;line-height:1.5;text-wrap:pretty"><span style="font-family:'JetBrains Mono',monospace">Fig. 3</span>. Cumulative wealth relative to the index over the holdout. The optimised trackers stay within roughly ±10% of the benchmark throughout, while B0's concentration in the largest names turns into a 35% drift by 2024. Tracking, not return, is the objective here. Shaded bands mark the COVID and 2022 drawdowns.</figcaption>
+      </figure>
+    </section>
+
+    <section id="hard" style="margin-top:44px;scroll-margin-top:32px">
+      <div style="font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:0.06em;text-transform:uppercase;color:#1f3a5f;margin-bottom:12px">What was difficult</div>
+      <p style="margin:0 0 16px;font-size:17px;text-wrap:pretty">E3 initially failed badly on the holdout, producing 8.47% tracking error despite looking reasonable in development. A simple diagnostic showed that its estimated covariance matrix was retaining only about 4% of the benchmark's own variance, pointing to a numerical problem rather than an economic one.</p>
+      <p style="margin:0;font-size:17px;text-wrap:pretty">The issue was in the nonlinear-shrinkage kernel: at \(N/T \approx 1\), very small eigenvalues pushed an intermediate calculation into a regime where the closed form lost floating-point precision. Replacing that unstable calculation with an equivalent asymptotic form restored the covariance structure and reduced holdout tracking error from 8.47% to 2.59%. The same instability was present in the reference implementations, so reproducing a reference result was not enough to establish correctness.</p>
+    </section>
+
+    <section id="next" style="margin-top:44px;scroll-margin-top:32px">
+      <div style="font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:0.06em;text-transform:uppercase;color:#1f3a5f;margin-bottom:12px">Limits and what's next</div>
+      <p style="margin:0 0 16px;font-size:17px;text-wrap:pretty">Costs enter through a turnover cap rather than directly in the objective. A natural extension would price trading explicitly and trace the trade-off between tracking error and transaction costs.</p>
+      <p style="margin:0 0 16px;font-size:17px;text-wrap:pretty">E2 also uses purely statistical factors. Replacing them with an industry- and style-based risk model would test whether economically structured covariance estimates improve on the statistical approach.</p>
+      <p style="margin:0;font-size:17px;text-wrap:pretty">Finally, rebalancing is fixed to a quarterly schedule. Because E3's risk forecasts are well calibrated, a natural next step is to test whether rebalancing only when predicted tracking error becomes large can reduce unnecessary trading.</p>
+    </section>
+
+  </article>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+const IDS = ["question", "setup", "approach", "results", "hard", "next"];
+
+class Component extends DCLogic {
+  state = { active: "question" };
+
+  componentDidMount() {
+    const seen = new Map();
+    this.observer = new IntersectionObserver((entries) => {
+      entries.forEach((e) => seen.set(e.target.id, e.isIntersecting ? e.intersectionRatio : 0));
+      let best = null, bestRatio = 0;
+      seen.forEach((ratio, id) => { if (ratio > bestRatio) { bestRatio = ratio; best = id; } });
+      if (best && best !== this.state.active) this.setState({ active: best });
+    }, { rootMargin: "-20% 0px -45% 0px", threshold: [0, 0.15, 0.4, 0.75, 1] });
+    IDS.forEach((id) => {
+      const el = document.getElementById(id);
+      if (el) this.observer.observe(el);
+    });
+    this.renderMath();
+  }
+
+  componentDidUpdate() {
+    clearTimeout(this._mathTimer);
+    this._mathTimer = setTimeout(() => this.renderMath(), 0);
+  }
+
+  renderMath(tries) {
+    const n = tries || 0;
+    if (window.renderMathInElement) {
+      window.renderMathInElement(document.body, {
+        delimiters: [
+          { left: "\\[", right: "\\]", display: true },
+          { left: "\\(", right: "\\)", display: false },
+        ],
+        throwOnError: false,
+      });
+    } else if (n < 40) {
+      setTimeout(() => this.renderMath(n + 1), 150);
+    }
+  }
+
+  componentWillUnmount() {
+    if (this.observer) this.observer.disconnect();
+    clearTimeout(this._mathTimer);
+  }
+
+  renderVals() {
+    const rail = {};
+    IDS.forEach((id) => { rail[id] = this.state.active === id ? "#1f3a5f" : "#848a92"; });
+    return { rail };
+  }
+}
+</script>
+</body>
+</html>
