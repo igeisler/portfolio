@@ -345,6 +345,13 @@ class Component extends DCLogic {
     });
     this.onKey = (e) => { if (e.key === "Escape" && this.state.cvOpen) { this._pdfDone = false; this._pdfTries = 0; this.setState({ cvOpen: false }); } };
     document.addEventListener("keydown", this.onKey);
+
+    this._onScroll = () => {
+      const last = IDS[IDS.length - 1];
+      const atBottom = window.innerHeight + window.scrollY >= document.documentElement.scrollHeight - 4;
+      if (atBottom && this.state.active !== last) this.setState({ active: last });
+    };
+    window.addEventListener("scroll", this._onScroll, { passive: true });
   }
 
   componentDidUpdate() {
@@ -398,6 +405,7 @@ class Component extends DCLogic {
 
   componentWillUnmount() {
     if (this.observer) this.observer.disconnect();
+    if (this._onScroll) window.removeEventListener("scroll", this._onScroll);
     document.removeEventListener("keydown", this.onKey);
   }
 
